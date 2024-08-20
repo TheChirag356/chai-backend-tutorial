@@ -1,6 +1,6 @@
 import { v2 as cloudinary } from "cloudinary";
 import fs from "fs";
-import { ApiError } from "./ApiError";
+import { ApiError } from "./ApiError.js";
 
 // Configuration
 cloudinary.config({
@@ -28,7 +28,7 @@ const uploadOnCloudinary = async (localFilePath) => {
 
 const removeImageFromCloudinary = async (oldURL) => {
   try {
-    if (!oldrURL) {
+    if (!oldURL) {
       throw new ApiError(400, "Invalid avatar image url");
     }
 
