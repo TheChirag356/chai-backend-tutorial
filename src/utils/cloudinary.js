@@ -1,6 +1,9 @@
 import { v2 as cloudinary } from "cloudinary";
 import fs from "fs";
 import { ApiError } from "./ApiError.js";
+import { extractPublicId } from 'cloudinary-build-url'
+
+console.log(process.env.CLOUDINARY_API_KEY)
 
 // Configuration
 cloudinary.config({
@@ -8,7 +11,6 @@ cloudinary.config({
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
-
 
 const uploadOnCloudinary = async (localFilePath) => {
   try {
@@ -32,18 +34,14 @@ const removeImageFromCloudinary = async (oldURL) => {
       throw new ApiError(400, "Invalid avatar image url");
     }
 
-    const getPublicId = (oldURL) => oldURL.split("/").pop().split(".")[0];
+    const publicId = extractPublicId(oldURL) 
     
-    const response = await cloudinary.uploader.destroy(getPublicId, {
-      resource_type: "auto",
-      invalidate: true,
-    });
+    const response = await cloudinary.uploader.destroy(publicId);
   
     return response;
   } catch (error) {
     return null;
   }
 }
-
 
 export { uploadOnCloudinary, removeImageFromCloudinary };
